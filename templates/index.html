@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECOयात्रा - Route Planner</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>ECOयात्रा</h1>
+            <p>Eco-friendly Route Planning System</p>
+        </header>
+
+        <div class="main-content">
+            <div class="input-section">
+                <form id="routeForm">
+                    <div class="form-group">
+                        <label for="start">Start Location:</label>
+                        <input type="text" id="start" name="start" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="destination">Destination:</label>
+                        <input type="text" id="destination" name="destination" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="vehicleType">Vehicle Type:</label>
+                        <select id="vehicleType" name="vehicleType" required>
+                            <option value="two_wheeler">Two Wheeler</option>
+                            <option value="three_wheeler">Three Wheeler</option>
+                            <option value="car">Car</option>
+                            <option value="bus">Bus</option>
+                            <option value="freight_vehicle">Freight Vehicle</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="vehicleDetailsContainer">
+                        <!-- Dynamic vehicle details inputs will be added here -->
+                    </div>
+
+                    <div class="button-group">
+                        <button type="submit">Calculate Route</button>
+                        <button type="button" id="monitorButton">Monitor Conditions</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="map-container">
+                <div id="map"></div>
+            </div>
+
+            <div class="info-panel">
+                <div class="route-info">
+                    <h3>Route Information</h3>
+                    <p>Distance: <span id="distance">-</span></p>
+                    <p>Duration: <span id="duration">-</span></p>
+                    <p>Emissions: <span id="emissions">-</span> kg CO2</p>
+                </div>
+
+                <div class="conditions">
+                    <h3>Current Conditions</h3>
+                    <p>Traffic: <span id="traffic">-</span></p>
+                    <p>Air Quality: <span id="airQuality">-</span></p>
+                    <p>Weather: <span id="weather">-</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+
+</html>
