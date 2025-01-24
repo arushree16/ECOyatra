@@ -148,4 +148,6 @@ def log_request_info():
     print('Body: %s', request.get_data())
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # Use 0.0.0.0 and dynamically retrieve the port from environment variables
+    port = int(os.environ.get("PORT", 5000))  # Default to 5000 for local testing
+    app.run(host="0.0.0.0", port=port, debug=True)
