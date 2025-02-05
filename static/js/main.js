@@ -1,7 +1,32 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize map
-    const map = L.map('map').setView([28.6139, 77.2090], 5);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+    const map = L.map('map').setView([28.6139, 77.2090], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: ' OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Language toggle functionality
+    const languageToggle = document.getElementById('languageToggle');
+    const elementsWithTranslation = document.querySelectorAll('[data-en][data-hi]');
+
+    function updateLanguage(isHindi) {
+        elementsWithTranslation.forEach(element => {
+            const key = isHindi ? 'data-hi' : 'data-en';
+            if (element.tagName === 'SPAN' || element.tagName === 'P' || element.tagName === 'LABEL' || element.tagName === 'H3') {
+                element.textContent = element.getAttribute(key);
+            } else if (element.tagName === 'OPTION') {
+                element.text = element.getAttribute(key);
+            }
+        });
+
+        // Update placeholder text for inputs
+        document.getElementById('start').placeholder = isHindi ? 'स्थान दर्ज करें' : 'Enter location';
+        document.getElementById('destination').placeholder = isHindi ? 'गंतव्य दर्ज करें' : 'Enter destination';
+    }
+
+    languageToggle.addEventListener('change', (e) => {
+        updateLanguage(e.target.checked);
+    });
 
     // Handle vehicle type changes
     const vehicleType = document.getElementById('vehicleType');
@@ -64,6 +89,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize with default vehicle type
     updateVehicleDetails(vehicleType.value);
+
+    // Custom markers
+    const startIcon = L.divIcon({
+        className: 'custom-div-icon',
+        html: '<i class="fas fa-map-marker-alt fa-2x" style="color: #2ecc71;"></i>',
+        iconSize: [20, 20],
+        iconAnchor: [10, 20]
+    });
+
+    const endIcon = L.divIcon({
+        className: 'custom-div-icon',
+        html: '<i class="fas fa-flag-checkered fa-2x" style="color: #e74c3c;"></i>',
+        iconSize: [20, 20],
+        iconAnchor: [10, 20]
+    });
 
     // Handle form submission
     document.getElementById('routeForm').addEventListener('submit', async function(e) {
@@ -233,23 +273,6 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Routes to display:', routes);  // Debug log
         console.log('Start point:', startPoint);    // Debug log
         console.log('End point:', endPoint);        // Debug log
-
-        // Custom icons for start and end points
-        const startIcon = L.divIcon({
-            html: '<i class="fas fa-map-marker-alt" style="color: #2E7D32; font-size: 16px;"></i>',
-            iconSize: [16, 16],
-            iconAnchor: [8, 16],
-            popupAnchor: [0, -16],
-            className: 'custom-div-icon'
-        });
-
-        const endIcon = L.divIcon({
-            html: '<i class="fas fa-map-pin" style="color: #C62828; font-size: 16px;"></i>',
-            iconSize: [16, 16],
-            iconAnchor: [8, 16],
-            popupAnchor: [0, -16],
-            className: 'custom-div-icon'
-        });
 
         // Add markers for start and end points
         const startMarker = L.marker(startPoint, {icon: startIcon})

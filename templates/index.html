@@ -15,29 +15,40 @@
         <header>
             <h1>ECOयात्रा</h1>
             <p>Eco-friendly Route Planning System</p>
+            <div class="language-toggle">
+                <span>English</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="languageToggle">
+                    <span class="slider"></span>
+                </label>
+                <span>हिंदी</span>
+            </div>
         </header>
 
         <div class="main-content">
             <div class="input-section">
                 <form id="routeForm">
                     <div class="form-group">
-                        <label for="start">Start Location:</label>
+                        <label for="start" data-en="Start Location:" data-hi="प्रारंभिक स्थान:">Start Location:</label>
+                        <i class="fas fa-map-marker-alt"></i>
                         <input type="text" id="start" name="start" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="destination">Destination:</label>
+                        <label for="destination" data-en="Destination:" data-hi="गंतव्य स्थान:">Destination:</label>
+                        <i class="fas fa-flag-checkered"></i>
                         <input type="text" id="destination" name="destination" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="vehicleType">Vehicle Type:</label>
+                        <label for="vehicleType" data-en="Vehicle Type:" data-hi="वाहन का प्रकार:">Vehicle Type:</label>
+                        <i class="fas fa-car"></i>
                         <select id="vehicleType" name="vehicleType" required>
-                            <option value="two_wheeler">Two Wheeler</option>
-                            <option value="three_wheeler">Three Wheeler</option>
-                            <option value="car">Car</option>
-                            <option value="bus">Bus</option>
-                            <option value="freight_vehicle">Freight Vehicle</option>
+                            <option value="two_wheeler" data-en="Two Wheeler" data-hi="दोपहिया वाहन">Two Wheeler</option>
+                            <option value="three_wheeler" data-en="Three Wheeler" data-hi="तिपहिया वाहन">Three Wheeler</option>
+                            <option value="car" data-en="Car" data-hi="कार">Car</option>
+                            <option value="bus" data-en="Bus" data-hi="बस">Bus</option>
+                            <option value="freight_vehicle" data-en="Freight Vehicle" data-hi="मालवाहक वाहन">Freight Vehicle</option>
                         </select>
                     </div>
 
@@ -46,8 +57,14 @@
                     </div>
 
                     <div class="button-group">
-                        <button type="submit">Calculate Route</button>
-                        <button type="button" id="monitorButton">Monitor Conditions</button>
+                        <button type="submit">
+                            <i class="fas fa-route"></i>
+                            <span data-en="Calculate Route" data-hi="मार्ग की गणना करें">Calculate Route</span>
+                        </button>
+                        <button type="button" id="monitorButton">
+                            <i class="fas fa-chart-line"></i>
+                            <span data-en="Monitor Conditions" data-hi="स्थिति की निगरानी करें">Monitor Conditions</span>
+                        </button>
                     </div>
                 </form>
             </div>
@@ -58,17 +75,53 @@
 
             <div class="info-panel">
                 <div class="route-info">
-                    <h3>Route Information</h3>
-                    <p>Distance: <span id="distance">-</span></p>
-                    <p>Duration: <span id="duration">-</span></p>
-                    <p>Emissions: <span id="emissions">-</span> kg CO2</p>
+                    <h3 data-en="Route Information" data-hi="मार्ग की जानकारी">Route Information</h3>
+                    <div class="info-card">
+                        <i class="fas fa-road"></i>
+                        <div class="info-card-content">
+                            <p data-en="Distance" data-hi="दूरी">Distance</p>
+                            <span id="distance">-</span>
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <i class="fas fa-clock"></i>
+                        <div class="info-card-content">
+                            <p data-en="Duration" data-hi="समय">Duration</p>
+                            <span id="duration">-</span>
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <i class="fas fa-leaf"></i>
+                        <div class="info-card-content">
+                            <p data-en="Emissions" data-hi="उत्सर्जन">Emissions</p>
+                            <span id="emissions">-</span>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="conditions">
-                    <h3>Current Conditions</h3>
-                    <p>Traffic: <span id="traffic">-</span></p>
-                    <p>Air Quality: <span id="airQuality">-</span></p>
-                    <p>Weather: <span id="weather">-</span></p>
+                    <h3 data-en="Current Conditions" data-hi="वर्तमान स्थिति">Current Conditions</h3>
+                    <div class="info-card">
+                        <i class="fas fa-traffic-light"></i>
+                        <div class="info-card-content">
+                            <p data-en="Traffic" data-hi="यातायात">Traffic</p>
+                            <span id="traffic">-</span>
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <i class="fas fa-wind"></i>
+                        <div class="info-card-content">
+                            <p data-en="Air Quality" data-hi="वायु गुणवत्ता">Air Quality</p>
+                            <span id="airQuality">-</span>
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <i class="fas fa-cloud-sun"></i>
+                        <div class="info-card-content">
+                            <p data-en="Weather" data-hi="मौसम">Weather</p>
+                            <span id="weather">-</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
