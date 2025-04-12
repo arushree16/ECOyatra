@@ -1,25 +1,24 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Initialize map
     const map = L.map('map').setView([28.6139, 77.2090], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: ' OpenStreetMap contributors'
+        attribution: 'OpenStreetMap contributors'
     }).addTo(map);
 
-    // Language toggle functionality
+    // Language toggle
     const languageToggle = document.getElementById('languageToggle');
     const elementsWithTranslation = document.querySelectorAll('[data-en][data-hi]');
 
     function updateLanguage(isHindi) {
         elementsWithTranslation.forEach(element => {
             const key = isHindi ? 'data-hi' : 'data-en';
-            if (element.tagName === 'SPAN' || element.tagName === 'P' || element.tagName === 'LABEL' || element.tagName === 'H3') {
+            if (['SPAN', 'P', 'LABEL', 'H3'].includes(element.tagName)) {
                 element.textContent = element.getAttribute(key);
             } else if (element.tagName === 'OPTION') {
                 element.text = element.getAttribute(key);
             }
         });
 
-        // Update placeholder text for inputs
         document.getElementById('start').placeholder = isHindi ? 'स्थान दर्ज करें' : 'Enter location';
         document.getElementById('destination').placeholder = isHindi ? 'गंतव्य दर्ज करें' : 'Enter destination';
     }
@@ -28,23 +27,16 @@ document.addEventListener('DOMContentLoaded', function() {
         updateLanguage(e.target.checked);
     });
 
-    // Handle vehicle type changes
     const vehicleType = document.getElementById('vehicleType');
     const vehicleDetailsContainer = document.getElementById('vehicleDetailsContainer');
 
-    vehicleType.addEventListener('change', function() {
+    vehicleType.addEventListener('change', function () {
         updateVehicleDetails(this.value);
     });
 
-    function showError(message) {
-    alert(message);  // You can replace this with a better UI notification
-    console.error(message);
-    }
-
     function updateVehicleDetails(type) {
         vehicleDetailsContainer.innerHTML = '';
-        
-        switch(type) {
+        switch (type) {
             case 'two_wheeler':
                 addInput('Engine CC', 'number', 'engineCC');
                 break;
@@ -57,6 +49,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 break;
             case 'freight_vehicle':
                 addSelect('Weight Class', ['LDV', 'MDV', 'HDV'], 'weightClass');
+                break;
+            case 'bus':
+                addSelect('Fuel Type', ['diesel', 'electric', 'cng'], 'fuelType');
                 break;
         }
     }
@@ -74,10 +69,9 @@ document.addEventListener('DOMContentLoaded', function() {
     function addSelect(label, options, id) {
         const div = document.createElement('div');
         div.className = 'form-group';
-        const optionsHtml = options.map(opt => 
+        const optionsHtml = options.map(opt =>
             `<option value="${opt}">${opt}</option>`
         ).join('');
-        
         div.innerHTML = `
             <label for="${id}">${label}:</label>
             <select id="${id}" name="${id}" required>
@@ -87,10 +81,8 @@ document.addEventListener('DOMContentLoaded', function() {
         vehicleDetailsContainer.appendChild(div);
     }
 
-    // Initialize with default vehicle type
     updateVehicleDetails(vehicleType.value);
 
-    // Custom markers
     const startIcon = L.divIcon({
         className: 'custom-div-icon',
         html: '<i class="fas fa-map-marker-alt fa-2x" style="color: #2ecc71;"></i>',
@@ -105,130 +97,90 @@ document.addEventListener('DOMContentLoaded', function() {
         iconAnchor: [10, 20]
     });
 
-    // Handle form submission
-    document.getElementById('routeForm').addEventListener('submit', async function(e) {
+    document.getElementById('routeForm').addEventListener('submit', async function (e) {
         e.preventDefault();
-        
         const formData = {
             start: document.getElementById('start').value,
             destination: document.getElementById('destination').value,
-            vehicleType: document.getElementById('vehicleType').value,
-            vehicleDetails: getVehicleDetails(document.getElementById('vehicleType').value)
+            vehicleType: vehicleType.value,
+            vehicleDetails: getVehicleDetails(vehicleType.value)
         };
 
         try {
-            console.log('Sending route calculation request:', formData);  // Debug log
             const response = await fetch('/calculate_route', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
             });
-
             const data = await response.json();
-            console.log('Received route data:', data);  // Debug log
-            
+
             if (data.error) {
                 alert(data.error);
                 return;
             }
 
-            if (data.success) {
-                // Make sure we have the required data
-                if (!data.routes || !data.routes[0] || !data.routes[0].coordinates) {
-                    console.error('Invalid route data received:', data);
-                    alert('Invalid route data received from server');
-                    return;
-                }
-
-                console.log('Updating map with route data:', data);  // Debug log
-                updateMap(data, data.start_coords, data.end_coords);
-                
-                // Update information panels
-                document.getElementById('distance').textContent = `${data.distance} km`;
-                document.getElementById('duration').textContent = `${data.duration} hours`;
-                document.getElementById('emissions').textContent = `${data.emissions} kg CO2`;
-            }
-            
+            updateMap(data, data.start_coords, data.end_coords);
+            document.getElementById('distance').textContent = `${data.distance} km`;
+            document.getElementById('duration').textContent = `${data.duration} hours`;
+            document.getElementById('emissions').textContent = `${data.emissions} kg CO2`;
         } catch (error) {
-            console.error('Error calculating route:', error);
-            alert('An error occurred while calculating the route');
+            console.error('Route calculation error:', error);
+            alert('Error calculating route');
         }
     });
 
-    // Handle monitoring button
-    document.getElementById('monitorButton').addEventListener('click', async function() {
+    document.getElementById('monitorButton').addEventListener('click', async function () {
         const start = document.getElementById('start').value;
         const destination = document.getElementById('destination').value;
 
         if (!start || !destination) {
-            alert('Please enter both start and destination locations');
+            alert('Please enter both start and destination');
             return;
         }
 
         try {
             const response = await fetch('/monitor_conditions', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    start: start,
-                    destination: destination
-                })
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ start, destination })
             });
-
             const data = await response.json();
-            
+
             if (data.error) {
                 alert(data.error);
                 return;
             }
 
-            if (data.success) {
-                // Update map with alternative routes
-                updateMap(data);
-                
-                // Update conditions display
-                const conditions = data.conditions;
-                if (conditions.traffic) {
-                    const [currentSpeed, freeFlowSpeed] = conditions.traffic;
-                    const congestion = freeFlowSpeed > 0 ? 
-                        Math.round((1 - (currentSpeed / freeFlowSpeed)) * 100) : 0;
-                    
-                    document.getElementById('traffic').textContent = 
-                        `Current Speed: ${currentSpeed} km/h ` +
-                        `(Free Flow: ${freeFlowSpeed} km/h) - ` +
-                        `${congestion}% congestion`;
-                } else {
-                    document.getElementById('traffic').textContent = 'Traffic data not available';
-                }
-                
-                document.getElementById('airQuality').textContent = 
-                    `Start: AQI ${conditions.start_location.air_quality.aqi} ` +
-                    `(PM2.5: ${conditions.start_location.air_quality.pm25}, PM10: ${conditions.start_location.air_quality.pm10}), ` +
-                    `End: AQI ${conditions.end_location.air_quality.aqi} ` +
-                    `(PM2.5: ${conditions.end_location.air_quality.pm25}, PM10: ${conditions.end_location.air_quality.pm10})`;
-                
-                document.getElementById('weather').textContent = 
-                    `Start: ${conditions.start_location.weather} (${conditions.start_location.temperature}°C), ` +
-                    `End: ${conditions.end_location.weather} (${conditions.end_location.temperature}°C)`;
-
-                // Show reroute alert if needed
-                if (conditions.needs_reroute) {
-                    alert(`Reroute Alert: ${conditions.reason}`);
-                }
+            updateMap(data);
+            const conditions = data.conditions;
+            if (conditions.traffic) {
+                const [currentSpeed, freeFlowSpeed] = conditions.traffic;
+                const congestion = freeFlowSpeed > 0 ? Math.round((1 - currentSpeed / freeFlowSpeed) * 100) : 0;
+                document.getElementById('traffic').textContent =
+                    `Current: ${currentSpeed} km/h (Free: ${freeFlowSpeed} km/h) - ${congestion}% congestion`;
+            } else {
+                document.getElementById('traffic').textContent = 'No traffic data';
             }
-            
+
+            document.getElementById('airQuality').textContent =
+                `Start AQI: ${conditions.start_location.air_quality.aqi}, PM2.5: ${conditions.start_location.air_quality.pm25}, PM10: ${conditions.start_location.air_quality.pm10} | ` +
+                `End AQI: ${conditions.end_location.air_quality.aqi}, PM2.5: ${conditions.end_location.air_quality.pm25}, PM10: ${conditions.end_location.air_quality.pm10}`;
+
+            document.getElementById('weather').textContent =
+                `Start: ${conditions.start_location.weather} (${conditions.start_location.temperature}°C), ` +
+                `End: ${conditions.end_location.weather} (${conditions.end_location.temperature}°C)`;
+
+            if (conditions.needs_reroute) {
+                alert(`Reroute Alert: ${conditions.reason}`);
+            }
         } catch (error) {
-            console.error('Error:', error);
-            alert('An error occurred while monitoring conditions');
+            console.error('Monitoring error:', error);
+            alert('Error monitoring route conditions');
         }
     });
 
     function getVehicleDetails(type) {
-        switch(type) {
+        switch (type) {
             case 'two_wheeler':
                 return document.getElementById('engineCC').value;
             case 'three_wheeler':
@@ -238,75 +190,58 @@ document.addEventListener('DOMContentLoaded', function() {
             case 'freight_vehicle':
                 return document.getElementById('weightClass').value;
             case 'bus':
-                return 'bus';
+                return document.getElementById('fuelType').value;
+            default:
+                return '';
         }
     }
 
     function updateMap(data, start_coords, end_coords) {
-        // Clear existing routes and markers
-        if (window.routeLayers) {
-            window.routeLayers.forEach(layer => map.removeLayer(layer));
-        }
-        if (window.markers) {
-            window.markers.forEach(marker => map.removeLayer(marker));
-        }
+        if (window.routeLayers) window.routeLayers.forEach(layer => map.removeLayer(layer));
+        if (window.markers) window.markers.forEach(marker => map.removeLayer(marker));
         window.routeLayers = [];
         window.markers = [];
 
-        // Handle both monitoring and route calculation cases
         let routes = [];
         let startPoint, endPoint;
 
         if (data.conditions && data.conditions.routes) {
-            // Monitoring case
             routes = data.conditions.routes;
             const firstRoute = routes[0];
+            if (!firstRoute?.coordinates) {
+                console.warn("No coordinates found in the first route");
+                alert("Unable to render route — no coordinates found.");
+                return;
+            }
             startPoint = firstRoute.coordinates[0];
             endPoint = firstRoute.coordinates[firstRoute.coordinates.length - 1];
+        } else if (Array.isArray(data.routes)) {
+            routes = data.routes;
+            startPoint = start_coords;
+            endPoint = end_coords;
         } else {
-            // Route calculation case
-            routes = Array.isArray(data) ? data : [data.routes[0]];
-            startPoint = [start_coords[0], start_coords[1]];
-            endPoint = [end_coords[0], end_coords[1]];
+            console.warn("Unexpected route data:", data);
+            alert("No valid routes returned from server.");
+            return;
         }
 
-        console.log('Routes to display:', routes);  // Debug log
-        console.log('Start point:', startPoint);    // Debug log
-        console.log('End point:', endPoint);        // Debug log
-
-        // Add markers for start and end points
-        const startMarker = L.marker(startPoint, {icon: startIcon})
-            .bindPopup('Start')
-            .addTo(map);
-        
-        const endMarker = L.marker(endPoint, {icon: endIcon})
-            .bindPopup('Destination')
-            .addTo(map);
-
+        const startMarker = L.marker(startPoint, { icon: startIcon }).addTo(map).bindPopup('Start');
+        const endMarker = L.marker(endPoint, { icon: endIcon }).addTo(map).bindPopup('Destination');
         window.markers = [startMarker, endMarker];
 
-        // Add each route with its color
         routes.forEach(route => {
-            console.log('Processing route:', route);  // Debug log
+            if (!route.coordinates) return;
             const routeLayer = L.polyline(route.coordinates, {
                 color: route.color || 'blue',
                 weight: 5,
                 opacity: 0.8
             }).addTo(map);
-            
-            routeLayer.bindPopup(
-                `${route.name || 'Route'}<br>` +
-                `Distance: ${route.distance} km<br>` +
-                `Duration: ${route.duration} hours`
-            );
-            
             window.routeLayers.push(routeLayer);
         });
 
-        // Fit map bounds to show all routes and markers
-        if (window.routeLayers.length > 0) {
-            const group = new L.featureGroup([...window.routeLayers, ...window.markers]);
-            map.fitBounds(group.getBounds(), {padding: [50, 50]});
+        if (startPoint && endPoint) {
+            const bounds = L.latLngBounds(startPoint, endPoint);
+            map.fitBounds(bounds, { padding: [50, 50] });
         }
     }
 });
