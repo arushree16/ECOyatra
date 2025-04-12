@@ -92,7 +92,7 @@ http://127.0.0.1:5000
 ---
 
 ## **🎨 Screenshots**
-![ECOयात्रा Screenshot](assets/modernui.png)
+![ECOयात्रा Screenshot](assets/modernui.jpeg)
 
 ---
 
