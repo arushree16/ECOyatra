@@ -7,13 +7,13 @@ An intelligent and sustainable route planning system that prioritizes environmen
 ---
 
 ## **✨ Features**
-- 🚗 **Route Calculation**: Generates routes with multiple eco-friendly alternatives.  
-- 🌐 **Real-time Traffic Monitoring**: Keeps you informed about current traffic conditions.  
-- 🌫 **Air Quality Monitoring**: Provides air quality data along your route.  
-- ☀️ **Weather Information**: Displays weather conditions for your journey.  
-- 🌱 **CO₂ Emissions Calculation**: Estimates emissions based on your vehicle type.  
-- 🚙 **Vehicle-specific Routing**: Tailors routes based on your vehicle’s specifications.  
-- 🔄 **Dynamic Rerouting**: Suggests new routes when conditions change.  
+- **Route Calculation**: Generates routes with multiple eco-friendly alternatives.  
+- **Real-time Traffic Monitoring**: Keeps you informed about current traffic conditions.  
+- **Air Quality Monitoring**: Provides air quality data along your route.  
+- **Weather Information**: Displays weather conditions for your journey.  
+- **CO₂ Emissions Calculation**: Estimates emissions based on your vehicle type.  
+- **Vehicle-specific Routing**: Tailors routes based on your vehicle’s specifications.  
+- **Dynamic Rerouting**: Suggests new routes when conditions change.  
 
 ---
 
@@ -44,7 +44,7 @@ eco_gps/
 
 ---
 
-## **🚀 Setup Instructions**
+## **Setup Instructions**
 
 ### 1️⃣ Clone the Repository  
 Clone the project repository to your local machine:  
@@ -81,7 +81,7 @@ http://127.0.0.1:5000
 
 ---
 
-## **💡 Usage**
+## **Usage**
 1. Enter your **start** and **destination** locations.  
 2. View routes with:  
    - Real-time traffic updates  
