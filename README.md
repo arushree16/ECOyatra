@@ -6,7 +6,7 @@ An intelligent and sustainable route planning system that prioritizes environmen
 
 ---
 
-## **✨ Features**
+## **Features**
 - **Route Calculation**: Generates routes with multiple eco-friendly alternatives.  
 - **Real-time Traffic Monitoring**: Keeps you informed about current traffic conditions.  
 - **Air Quality Monitoring**: Provides air quality data along your route.  
