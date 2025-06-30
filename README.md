@@ -17,7 +17,7 @@ An intelligent and sustainable route planning system that prioritizes environmen
 
 ---
 
-## **🛠️ Technologies Used**
+## **Technologies Used**
 - **Backend**: Python (Flask)  
 - **Frontend**: JavaScript (Leaflet.js for interactive mapping)  
 - **APIs**:  
@@ -27,7 +27,7 @@ An intelligent and sustainable route planning system that prioritizes environmen
 
 ---
 
-## **📂 Project Structure**
+## **Project Structure**
 
 ```
 eco_gps/
