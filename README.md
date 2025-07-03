@@ -1,4 +1,4 @@
-# **ECOयात्रा** - Eco-friendly Route Planning System 🌍
+# **ECOयात्रा** - Eco-friendly Route Planning System 
 
 Website: https://ecoyatra-1.onrender.com
 
@@ -91,14 +91,14 @@ http://127.0.0.1:5000
 
 ---
 
-## 🔮 Future Work
+## Future Work
 - Add user authentication and saved trip history
 - Integrate EV charging station data
 - Expand route optimization to include metro/bike-sharing
 - Build mobile app version (React Native)
 - Build an interactive chatbot 
 
-## **🎨 Screenshots**
+## ** Screenshots**
 ![ECOयात्रा Screenshot](assets/modernui.jpeg)
 
 ---
