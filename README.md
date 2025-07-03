@@ -98,7 +98,7 @@ http://127.0.0.1:5000
 - Build mobile app version (React Native)
 - Build an interactive chatbot 
 
-## ** Screenshots**
+## Screenshots
 ![ECOयात्रा Screenshot](assets/modernui.jpeg)
 
 ---
